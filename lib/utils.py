@@ -24,4 +24,4 @@ def imshow(*images, titles=None, cols = 3, titleColor = "black", cmap = 'gray'):
             plt.title(titles[i], color = titleColor)
         plt.xticks([])
         plt.yticks([])
-    plt.show()   
+    plt.show()
