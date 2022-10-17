@@ -1,6 +1,6 @@
 import numpy as np
 import cv2 as cv
-from .misc import get_image_dimensions
+from .misc import get_image_dimensions, generate_histogram
 
 def fix_image_colors(image):
     w, h, depth = get_image_dimensions(image)
@@ -9,6 +9,11 @@ def fix_image_colors(image):
     b, g, r = cv.split(image)
     return cv.merge([r, g, b])   
 
+def equalize(img: np.ndarray, levels: int = 255) -> np.ndarray:
+    cdf = np.cumsum(generate_histogram(img.astype('float')))
+    cdf_map = (cdf - np.min(cdf)) * levels / (cdf[-1] - np.min(cdf))
+    return cdf_map[img].astype('int8')
+
 def color_balance(img, low_per, high_per):
     tot_pix = img.shape[1] * img.shape[0]
     low_count = tot_pix * low_per / 100
@@ -16,7 +21,7 @@ def color_balance(img, low_per, high_per):
     
     cs_img = []
     for ch in cv.split(img):
-        cum_hist_sum = np.cumsum(cv.calcHist([ch], [0], None, [256], (0, 256)))
+        cum_hist_sum = np.cumsum(generate_histogram(ch))
 
         li, hi = np.searchsorted(cum_hist_sum, (low_count, high_count))
         if (li == hi):
