@@ -3,7 +3,7 @@ import cv2 as cv
 from .misc import get_image_dimensions, generate_histogram
 
 def fix_image_colors(image):
-    w, h, depth = get_image_dimensions(image)
+    _, _, depth = get_image_dimensions(image)
     if depth == 1:
          return image
     b, g, r = cv.split(image)
@@ -12,7 +12,7 @@ def fix_image_colors(image):
 def equalize(img: np.ndarray, levels: int = 255) -> np.ndarray:
     cdf = np.cumsum(generate_histogram(img.astype('float')))
     cdf_map = (cdf - np.min(cdf)) * levels / (cdf[-1] - np.min(cdf))
-    return cdf_map[img].astype('int8')
+    return cdf_map[img].astype('uint8')
 
 def color_balance(img, low_per, high_per):
     tot_pix = img.shape[1] * img.shape[0]
