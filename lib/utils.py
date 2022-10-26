@@ -24,7 +24,6 @@ def imshow(*images, titles = None, cols = 3, titleColor = 'black', cmap = 'gray'
         plt.yticks([])
     plt.show()
 
-
 def histograms(*images, titles = None, cols = 3, titleColor = 'black'):
     rows = ceil(len(images) / cols)
     row_size = 3
@@ -42,6 +41,21 @@ def histograms(*images, titles = None, cols = 3, titleColor = 'black'):
             for channel in range(depth):
                 histogram, bin_edges = np.histogram(img[:, :, channel], bins=256, range=(0, 256))
                 plt.plot(bin_edges[0:-1], histogram, color=colors[channel])
+        if titles is not None:
+            plt.title(titles[i], color = titleColor)
+    plt.show()
+
+
+def plot_histograms(*data, titles = None, cols = 3, titleColor = 'black', bins=10):
+    rows = ceil(len(data) / cols)
+    row_size = 3
+    size = 16 / cols
+    plt.figure(figsize=(cols * size, rows * row_size))
+    for i in range(len(data)):
+        plt.subplot(rows, cols, i+1)
+        hist_data = np.array([len(contour) for contour in data[i]])
+        histogram, bin_edges = np.histogram(hist_data, bins=hist_data.max(), range=(hist_data.min(), hist_data.max()))
+        plt.plot(bin_edges[0:-1], histogram)
         if titles is not None:
             plt.title(titles[i], color = titleColor)
     plt.show()
