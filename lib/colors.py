@@ -34,3 +34,9 @@ def color_balance(img, low_per, high_per):
         cs_img.append(cs_ch)
         
     return cv.merge(cs_img)
+
+def binarize(img: np.ndarray, threshold: float) -> np.ndarray:
+    result = np.zeros_like(img)
+    result[img < threshold] = 0
+    result[img >= threshold] = 1
+    return result
