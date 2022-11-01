@@ -1,6 +1,6 @@
 import numpy as np
 import cv2 as cv
-from .misc import get_image_dimensions, generate_histogram
+from .misc import get_image_dimensions, generate_histogram, otsu
 
 def fix_image_colors(image):
     _, _, depth = get_image_dimensions(image)
@@ -36,6 +36,8 @@ def color_balance(img, low_per, high_per):
     return cv.merge(cs_img)
 
 def binarize(img: np.ndarray, threshold: float) -> np.ndarray:
+    if threshold is None:
+        threshold, _ = otsu(img)
     result = np.zeros_like(img)
     result[img < threshold] = 0
     result[img >= threshold] = 1
